@@ -1,21 +1,28 @@
 version: '3.3'
 services:
   mysql:
+    image: cartoes-mysql
     build:
-      context: ./Clientes
+      context: ./Cartoes
       dockerfile: Dockerfile
     ports:
-      - 3306:3306
-    restart: always
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: clientes
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
     volumes:
       - db-data:/var/lib/mysql
-  app-clientes:
-    build:
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    links:
-      - mysql
-    restart: always
-    depends_on:
-      - mysql
+volumes:
+  db-data:
+#  app-cartoes:
+#    build:
+#      dockerfile: Dockerfile
+#    ports:
+#      - 8080:8080
+#    links:
+#      - mysql
+#    restart: always
+#    depends_on:
+#      - mysql

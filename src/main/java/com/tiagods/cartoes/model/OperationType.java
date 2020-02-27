@@ -18,8 +18,8 @@ import java.util.Objects;
 public class OperationType {
     @ApiModelProperty(value = "Codigo da operação")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "OperationType_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Operation_Type_ID")
     private Long operationTypeId;
     @ApiModelProperty(value = "Descricao da operação")
     @Column(name = "Description0")

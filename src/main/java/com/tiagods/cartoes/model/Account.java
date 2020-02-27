@@ -15,13 +15,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "accounts")
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "accountId")
 public class Account {
     @ApiModelProperty(value = "Codigo da conta")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Account_ID")
     private Long accountId;
     @ApiModelProperty(value = "Numero da conta")
@@ -29,7 +30,7 @@ public class Account {
     @NotNull(message = "Numero do Documento obrigatorio")
     private Long documentNumber;
     @JsonIgnore
-    @OneToMany(cascade= CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade= CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
 
     public Account(Long accountId, Long documentNumber){

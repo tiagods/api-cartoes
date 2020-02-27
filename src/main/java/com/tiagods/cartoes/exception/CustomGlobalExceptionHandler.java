@@ -1,5 +1,6 @@
 package com.tiagods.cartoes.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -17,6 +20,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -32,6 +37,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(TransactionException.class)
     public ResponseEntity<?> transactionException(TransactionException ex, HttpServletResponse response) {
         return buildResponseEntity(HttpStatus.NOT_FOUND, Arrays.asList(ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = InvalidFormatException.class)
+    public ResponseEntity<?> processValidationError(InvalidFormatException ex, HttpServletResponse response) {
+        return buildResponseEntity(BAD_REQUEST, Arrays.asList(ex.getMessage()));
     }
 
     private ResponseEntity<?> buildResponseEntity(HttpStatus status, List<String> erros) {

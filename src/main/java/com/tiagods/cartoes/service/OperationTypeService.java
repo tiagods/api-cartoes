@@ -1,11 +1,13 @@
 package com.tiagods.cartoes.service;
 
+import com.tiagods.cartoes.config.Errors;
 import com.tiagods.cartoes.exception.AccountException;
 import com.tiagods.cartoes.exception.OperationTypeException;
 import com.tiagods.cartoes.model.Account;
 import com.tiagods.cartoes.model.OperationType;
 import com.tiagods.cartoes.repository.OperationTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,9 @@ import java.util.Optional;
 public class OperationTypeService  {
 
     @Autowired
+    private Errors errors;
+
+    @Autowired
     private OperationTypeRepository repository;
 
     public void atualizar(OperationType operationType, Long operationId){
@@ -22,18 +27,17 @@ public class OperationTypeService  {
             operationType.setOperationTypeId(operationId);
             repository.save(operationType);
         }
-        else throw new OperationTypeException("Não existe com o id informado");
+        else throw new OperationTypeException(errors.getOperacaoError().getNaoExiste());
     }
     public OperationType criar(OperationType operationType){
-        if(verificarSeExiste(operationType.getOperationTypeId()))
-            throw new OperationTypeException("Ja existe um registro com id informado");
-        else return repository.save(operationType);
+        operationType.setOperationTypeId(null);
+        return repository.save(operationType);
     }
     public void deletar(Long operationTypeId){
         if(verificarSeExiste(operationTypeId)){
             repository.deleteById(operationTypeId);
         }
-        else throw new OperationTypeException("Não existe com o id informado");
+        else throw new OperationTypeException(errors.getOperacaoError().getNaoExiste());
     }
     public Optional<OperationType> buscar(Long operationTypeId){
         return repository.findById(operationTypeId);
@@ -55,6 +59,6 @@ public class OperationTypeService  {
     public OperationType buscarPorId(Long operationTypeId) {
         Optional<OperationType> account = buscar(operationTypeId);
         if(account.isPresent()) return  account.get();
-        else throw new OperationTypeException("Não existe com  o id informado");
+        else throw new OperationTypeException(errors.getOperacaoError().getNaoExiste());
     }
 }

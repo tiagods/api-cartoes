@@ -1,13 +1,22 @@
 server:
   port: 8080
-#spring:
-#  profile: container
-#  jpa:
-#    database: MYSQL
-#    hibernate:
-#      ddl-auto: validate
-#  datasource:
-#    url: jdbc:mysql://mysql:3306/apicliente
-#    username: root
-#    password:
-#    driver-class-name: com.mysql.jdbc.Driver
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/clientes
+    username: root
+    password: root
+errors:
+  conta-error:
+    nao-existe: "Não existe operacao com o id informado"
+  operacao-error:
+    nao-existe: "Não existe operacao com o id informado"
+  transacao-error:
+    nao-existe: "Não existe transacao com o id informado"
