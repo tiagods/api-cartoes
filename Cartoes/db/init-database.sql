@@ -5,6 +5,7 @@ use clientes;
 create table accounts(
     Account_ID int auto_increment,
     Document_Number bigint not null,
+    Available_Credito_Limit numeric(14,2),
     primary key(Account_ID)
 );
 
@@ -25,7 +26,7 @@ create table transactions (
     foreign key (Operation_Type_ID) references operation_type(Operation_Type_ID)
 );
 
-INSERT INTO accounts (Account_ID,Document_Number) values (1,12345678900);
+INSERT INTO accounts (Account_ID,Document_Number) values (1,12345678900,5000);
 
 INSERT INTO operation_type (Operation_Type_ID,Description0) values (1,'COMPRA A VISTA');
 INSERT INTO operation_type (Operation_Type_ID,Description0) values (2,'COMPRA PARCELADA');

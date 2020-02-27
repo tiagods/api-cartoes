@@ -20,3 +20,4 @@ errors:
     nao-existe: "Não existe operacao com o id informado"
   transacao-error:
     nao-existe: "Não existe transacao com o id informado"
+    limite-indisponivel: "Limite indisponivel"

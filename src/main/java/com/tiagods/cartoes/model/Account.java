@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,8 +30,12 @@ public class Account {
     @Column(name = "Document_Number")
     @NotNull(message = "Numero do Documento obrigatorio")
     private Long documentNumber;
+
+    @Column(name="Available_Credito_Limit")
+    private BigDecimal AvailableCreditLimit = new BigDecimal("5000.00");
     @JsonIgnore
     @OneToMany(mappedBy = "account", cascade= CascadeType.ALL, orphanRemoval = true)
+
     private List<Transaction> transactions = new ArrayList<>();
 
     public Account(Long accountId, Long documentNumber){

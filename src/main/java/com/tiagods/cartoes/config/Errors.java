@@ -26,5 +26,6 @@ public class Errors {
     @Data
     public static class TransacaoError{
         private String naoExiste;
+        private String limiteIndisponivel;
     }
 }

@@ -38,6 +38,10 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<?> transactionException(TransactionException ex, HttpServletResponse response) {
         return buildResponseEntity(HttpStatus.NOT_FOUND, Arrays.asList(ex.getMessage()));
     }
+    @ExceptionHandler(LimiteNaoDisponivelException.class)
+    public ResponseEntity<?> transactionException(LimiteNaoDisponivelException ex, HttpServletResponse response) {
+        return buildResponseEntity(HttpStatus.NOT_FOUND, Arrays.asList(ex.getMessage()));
+    }
 
     @ExceptionHandler(value = InvalidFormatException.class)
     public ResponseEntity<?> processValidationError(InvalidFormatException ex, HttpServletResponse response) {

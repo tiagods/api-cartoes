@@ -5,6 +5,7 @@ import com.tiagods.cartoes.model.OperationType;
 import com.tiagods.cartoes.model.Transaction;
 import com.tiagods.cartoes.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,18 +30,10 @@ public class TransactionResource {
         return ResponseEntity.ok().body(service.buscarPorId(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Long id, @Valid @RequestBody TransactionDTO transactionDTO){
-        service.atualizar(transactionDTO,id);
-        return ResponseEntity.noContent().build();
-    }
     @PostMapping
     public ResponseEntity<?> salvar(@Valid @RequestBody TransactionDTO transactionDTO){
         Transaction transaction = service.criar(transactionDTO);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(transaction.getTransactionId()).toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(transaction.getAccount());
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable Long id){

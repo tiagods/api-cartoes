@@ -2,6 +2,8 @@ package com.tiagods.cartoes.service;
 
 import com.tiagods.cartoes.config.Errors;
 import com.tiagods.cartoes.dto.TransactionDTO;
+import com.tiagods.cartoes.enums.OperationEnum;
+import com.tiagods.cartoes.exception.LimiteNaoDisponivelException;
 import com.tiagods.cartoes.exception.TransactionException;
 import com.tiagods.cartoes.model.Account;
 import com.tiagods.cartoes.model.OperationType;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +35,7 @@ public class TransactionService {
     @Autowired
     private AccountService account;
 
+
     public void atualizar(TransactionDTO transactionDto, Long transactionId) {
         if (verificarSeExiste(transactionId)) {
             Transaction transaction = validarContaEOperacao(transactionDto);
@@ -41,7 +46,7 @@ public class TransactionService {
 
     public Transaction criar(TransactionDTO transactionDto) {
         Transaction transaction = validarContaEOperacao(transactionDto);
-        return transactions.save(transaction);
+        return validarOperacao(transaction);
     }
 
     public void deletar(Long transactionId) {
@@ -75,4 +80,22 @@ public class TransactionService {
     public List<Transaction> listar() {
         return transactions.findAll();
     }
+
+    private Transaction validarOperacao(Transaction transaction){
+        Long operacao = transaction.getOperationType().getOperationTypeId();
+        Optional<OperationEnum> operationEnum = Arrays.asList(OperationEnum.values()).stream().filter(c->c.getValue()==operacao).findFirst();
+        Account conta = transaction.getAccount();
+        if(operationEnum.get()!=OperationEnum.PAGAMENTO && verificarCreditoDisponivel(conta,transaction.getAmount()))
+            throw new LimiteNaoDisponivelException(errors.getTransacaoError().getLimiteIndisponivel());
+        BigDecimal decimal = conta.getAvailableCreditLimit();
+        BigDecimal calculo = decimal.add(transaction.getAmount());
+        conta.setAvailableCreditLimit(calculo);
+        account.atualizar(conta,conta.getAccountId());
+        return transactions.save(transaction);
+    }
+
+    private boolean verificarCreditoDisponivel(Account conta, BigDecimal amount) {
+        return (conta.getAvailableCreditLimit().doubleValue() < amount.abs().doubleValue());
+    }
+
 }
