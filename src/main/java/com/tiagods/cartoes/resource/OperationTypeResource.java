@@ -10,6 +10,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 
+/**
+ *  Recurso para disponibilização de dados via rest para tipos de Operacoes
+ */
+
 @RestController
 @RequestMapping("/api/operations")
 public class OperationTypeResource {

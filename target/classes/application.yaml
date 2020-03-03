@@ -15,9 +15,9 @@ spring:
     password: root
 errors:
   conta-error:
-    nao-existe: "Não existe operacao com o id informado"
+    nao-existe: "Não existe conta com o id informado"
   operacao-error:
     nao-existe: "Não existe operacao com o id informado"
   transacao-error:
     nao-existe: "Não existe transacao com o id informado"
-    limite-indisponivel: "Limite indisponivel"
+    limite-indisponivel: "Limite de saldo indisponivel"

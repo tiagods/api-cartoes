@@ -13,6 +13,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 
+/**
+ * Recurso para disponibilização de dados via rest para transações
+ */
+
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionResource {

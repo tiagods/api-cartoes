@@ -35,6 +35,11 @@ public class TransactionService {
     @Autowired
     private AccountService account;
 
+    /**
+     * Atualizar transação existe
+     * @param transactionDto dto com os dados da transação para atualização
+     * @param transactionId id no qual sera validado se transaçaão existe
+     */
 
     public void atualizar(TransactionDTO transactionDto, Long transactionId) {
         if (verificarSeExiste(transactionId)) {
@@ -44,11 +49,20 @@ public class TransactionService {
         } else throw new TransactionException(errors.getTransacaoError().getNaoExiste());
     }
 
+    /**
+     * Gerar nova transação com validação de operação
+     * @param transactionDto
+     * @return retornar transação criada
+     */
     public Transaction criar(TransactionDTO transactionDto) {
         Transaction transaction = validarContaEOperacao(transactionDto);
         return validarOperacao(transaction);
     }
 
+    /**
+     *
+     * @param transactionId
+     */
     public void deletar(Long transactionId) {
         if (verificarSeExiste(transactionId)) {
             transactions.deleteById(transactionId);
@@ -68,6 +82,11 @@ public class TransactionService {
         return transactions.existsById(transactionId);
     }
 
+    /**
+     * A partir da dto verificacr se conta e operação existem
+     * @param transactionDto
+     * @return retornar transacao a partir da dto
+     */
     private Transaction validarContaEOperacao(TransactionDTO transactionDto) {
         Transaction transaction = new Transaction(transactionDto);
         Account account = this.account.buscarPorId(transactionDto.getAccountId());
@@ -81,21 +100,36 @@ public class TransactionService {
         return transactions.findAll();
     }
 
+    /**
+     * Valida operaçao efetuando analise de credito limite
+     * @param transaction
+     * @return
+     */
     private Transaction validarOperacao(Transaction transaction){
-        Long operacao = transaction.getOperationType().getOperationTypeId();
-        Optional<OperationEnum> operationEnum = Arrays.asList(OperationEnum.values()).stream().filter(c->c.getValue()==operacao).findFirst();
+        Optional<OperationEnum> operationEnum = OperationEnum.getInstance(
+                transaction.getOperationType().getOperationTypeId());
         Account conta = transaction.getAccount();
-        if(operationEnum.get()!=OperationEnum.PAGAMENTO && verificarCreditoDisponivel(conta,transaction.getAmount()))
+        BigDecimal limit = conta.getAvailableCreditLimit();
+        BigDecimal amount = transaction.getAmount();
+        if(operationEnum.isPresent() && !operationEnum.get().equals(OperationEnum.PAGAMENTO)
+                    && !verificarSeCreditoDisponivel(limit, amount))
+                throw new LimiteNaoDisponivelException(errors.getTransacaoError().getLimiteIndisponivel());
+        else if(operationEnum.isEmpty() && !verificarSeCreditoDisponivel(limit, amount))
             throw new LimiteNaoDisponivelException(errors.getTransacaoError().getLimiteIndisponivel());
-        BigDecimal decimal = conta.getAvailableCreditLimit();
-        BigDecimal calculo = decimal.add(transaction.getAmount());
+        BigDecimal calculo = limit.add(transaction.getAmount());
         conta.setAvailableCreditLimit(calculo);
-        account.atualizar(conta,conta.getAccountId());
+        account.atualizar(conta);
         return transactions.save(transaction);
     }
 
-    private boolean verificarCreditoDisponivel(Account conta, BigDecimal amount) {
-        return (conta.getAvailableCreditLimit().doubleValue() < amount.abs().doubleValue());
+    /**
+     * Verifica saldo disponivel, se a compra for maior que limite returnara true
+     * @param limit valor  disponivel
+     * @param amount valor solicitado
+     * @return true se possue limite
+     */
+    private boolean verificarSeCreditoDisponivel(BigDecimal limit, BigDecimal amount) {
+        return (limit.compareTo(amount.abs())>=0);
     }
 
 }

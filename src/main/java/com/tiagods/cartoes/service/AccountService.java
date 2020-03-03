@@ -20,6 +20,11 @@ public class AccountService {
     @Autowired
     private AccountRepository repository;
 
+    /**
+     * Atualizar com validação de conta existente
+     * @param account Account
+     * @param accountId Long numero da conta
+     */
     public void atualizar(Account account, Long accountId){
         if(verificarSeExiste(accountId)) {
             account.setAccountId(accountId);
@@ -27,6 +32,15 @@ public class AccountService {
         }
         else throw new AccountException(errors.contaError.getNaoExiste());
     }
+
+    /**
+     * Atualizar sem validação
+     * @param account Account
+     */
+    public void atualizar(Account account){
+        repository.save(account);
+    }
+
     public Account criar(Account account){
         account.setAccountId(null);
         return repository.save(account);
