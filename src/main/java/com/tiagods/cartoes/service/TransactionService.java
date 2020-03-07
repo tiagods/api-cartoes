@@ -123,9 +123,9 @@ public class TransactionService {
     }
 
     /**
-     * Verifica saldo disponivel, se a compra for maior que limite returnara true
-     * @param limit valor  disponivel
-     * @param amount valor solicitado
+     * Verifica saldo disponivel, se a compra for maior que limite retornara true
+     * @param limit BigDecimal valor disponivel
+     * @param amount BigDecimal valor solicitado
      * @return true se possue limite
      */
     private boolean verificarSeCreditoDisponivel(BigDecimal limit, BigDecimal amount) {

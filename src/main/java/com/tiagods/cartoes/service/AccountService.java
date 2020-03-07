@@ -28,7 +28,7 @@ public class AccountService {
     public void atualizar(Account account, Long accountId){
         if(verificarSeExiste(accountId)) {
             account.setAccountId(accountId);
-            repository.save(account);
+            atualizar(account);
         }
         else throw new AccountException(errors.contaError.getNaoExiste());
     }
@@ -37,9 +37,7 @@ public class AccountService {
      * Atualizar sem validação
      * @param account Account
      */
-    public void atualizar(Account account){
-        repository.save(account);
-    }
+    public void atualizar(Account account){repository.save(account);}
 
     public Account criar(Account account){
         account.setAccountId(null);

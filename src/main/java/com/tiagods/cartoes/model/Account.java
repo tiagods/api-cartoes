@@ -19,6 +19,7 @@ import java.util.Objects;
 @Table(name = "accounts")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "accountId")
 public class Account {
     @ApiModelProperty(value = "Codigo da conta")
@@ -32,10 +33,9 @@ public class Account {
     private Long documentNumber;
 
     @Column(name="Available_Credito_Limit")
-    private BigDecimal AvailableCreditLimit = new BigDecimal("5000.00");
+    private BigDecimal AvailableCreditLimit = new BigDecimal("0.00");
     @JsonIgnore
-    @OneToMany(mappedBy = "account", cascade= CascadeType.ALL, orphanRemoval = true)
-
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade= CascadeType.ALL)
     private List<Transaction> transactions = new ArrayList<>();
 
     public Account(Long accountId, Long documentNumber){

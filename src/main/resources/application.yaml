@@ -1,6 +1,20 @@
 server:
   port: 8080
 spring:
+  spring:
+    profiles:
+      active: prod
+errors:
+  conta-error:
+    nao-existe: "Não existe conta com o id informado"
+  operacao-error:
+    nao-existe: "Não existe operacao com o id informado"
+  transacao-error:
+    nao-existe: "Não existe transacao com o id informado"
+    limite-indisponivel: "Limite de saldo indisponivel"
+---
+spring:
+  profiles: prod
   jpa:
     hibernate:
       ddl-auto: none
@@ -13,11 +27,4 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/clientes
     username: root
     password: root
-errors:
-  conta-error:
-    nao-existe: "Não existe conta com o id informado"
-  operacao-error:
-    nao-existe: "Não existe operacao com o id informado"
-  transacao-error:
-    nao-existe: "Não existe transacao com o id informado"
-    limite-indisponivel: "Limite de saldo indisponivel"
+
