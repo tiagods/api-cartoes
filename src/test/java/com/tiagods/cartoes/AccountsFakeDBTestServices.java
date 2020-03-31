@@ -6,13 +6,14 @@ import com.tiagods.cartoes.model.Account;
 import com.tiagods.cartoes.repository.AccountRepository;
 import com.tiagods.cartoes.service.AccountService;
 import lombok.Data;
-import org.junit.*;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.annotation.Order;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManagerFactory;
@@ -26,7 +27,7 @@ import java.util.Properties;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {CartoesApplication.class, H2ConfigTest.class})
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountsFakeDBTestServices {
 
     @Autowired AccountService accountService;
